@@ -62,14 +62,6 @@ export const removeCategories = async (req, res) => {
          },
          { new: true },
       );
-      await Category.updateMany(
-         {},
-         {
-            $pull: {
-               subCategories: category._id,
-            },
-         },
-      );
       await Category.findOneAndDelete({ _id: req.params.id });
       res.json({
          message: 'Delete category successfully',
@@ -95,7 +87,7 @@ export const getAllCategory = async (req, res) => {
 };
 export const getOneCategory = async (req, res) => {
    try {
-      const category = await Category.findById(req.params.id).populate('subCategories');
+      const category = await Category.findById(req.params.id);
       if (category) {
          return res.status(201).json({
             message: 'Get one category successfully',

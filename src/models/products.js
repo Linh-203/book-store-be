@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 const productSchema = new mongoose.Schema(
    {
       name: {
@@ -26,13 +27,10 @@ const productSchema = new mongoose.Schema(
          type: Number,
          default: 0,
       },
-
-      //  brandId: {
-      //      type: mongoose.Schema.Types.ObjectId,
-      //      required: true,
-      //      ref: "Brand"
-
-      //  },
+      maxQuantity: {
+         type: Number,
+         default: 0,
+      },
       categoryId: {
          type: mongoose.Schema.Types.ObjectId,
          required: true,
@@ -41,4 +39,5 @@ const productSchema = new mongoose.Schema(
    },
    { timestamps: true, versionKey: false },
 );
+productSchema.plugin(paginate);
 export default mongoose.model('Products', productSchema);

@@ -3,20 +3,32 @@ import Category from '../models/categories';
 import { productSchema } from '../schemas/product';
 
 export const getAllProduct = async (req, res) => {
-   const { _page = 1, _order = 'asc', _limit = 12, _sort = 'createdAt', _q = '' } = req.query;
+   const { _page = 1, _order = 'asc', _limit = 1000000, _sort = 'createdAt', _q = '' } = req.query;
    const options = {
       page: _page,
       limit: _limit,
       sort: {
          [_sort]: _order === 'desc' ? -1 : 1,
       },
-      populate: [{ path: 'brandId' }, { path: 'categoryId' }, { path: 'sizes.sizeId' }],
+      populate: [{ path: 'categoryId' }],
+      collation: { locale: 'vi', strength: 1 },
    };
+   const optionsSearch =
+      _q !== ''
+         ? {
+              $or: [
+                 { name: { $regex: _q, $options: 'i' } },
+                 //   { price: { $regex: _q, $options: 'i' } },
+                 { author: { $regex: _q, $options: 'i' } },
+              ],
+           }
+         : {};
+   // const optionsSearch = _q !== '' ? { $text: { $search: _q } } : {};
    try {
-      const product = await Products.find().populate('categoryId');
+      const product = await Products.paginate({ ...optionsSearch }, { ...options });
       return res.status(201).json({
          message: 'Get all product successfully',
-         product,
+         product: product.docs,
       });
    } catch (error) {
       return res.status(400).json({

@@ -8,4 +8,5 @@ export const productSchema = joi.object({
    author: joi.string().required(),
    categoryId: joi.string().required(),
    discount: joi.number().required(),
+   maxQuantity: joi.number(),
 });
