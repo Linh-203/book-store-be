@@ -166,8 +166,9 @@ export const refresh = async (req, res) => {
    try {
       const refreshToken = req.cookies.refreshToken;
       if (!refreshToken) {
-         return res.status(404).json({
-            message: `Form error: Unthorized`,
+         return res.status(200).json({
+            accessToken: '',
+            data: {},
          });
       }
       jwt.verify(refreshToken, process.env.SERECT_REFRESHTOKEN_KEY, async (err, decode) => {
