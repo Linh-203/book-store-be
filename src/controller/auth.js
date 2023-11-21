@@ -76,9 +76,11 @@ export const signUp = async (req, res) => {
       });
 
       res.cookie('accessToken', accessToken, {
+         domain: process.env.DOMAIN,
          expires: new Date(Date.now() + 5 * 60 * 1000),
       });
       res.cookie('refreshToken', refreshToken, {
+         domain: process.env.DOMAIN,
          expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       });
 
@@ -132,9 +134,11 @@ export const signIn = async (req, res) => {
          expiresIn: '5m',
       });
       res.cookie('accessToken', accessToken, {
+         domain: process.env.DOMAIN,
          expires: new Date(Date.now() + 5 * 60 * 1000),
       });
       res.cookie('refreshToken', refreshToken, {
+         domain: process.env.DOMAIN,
          expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
       });
 
@@ -153,9 +157,11 @@ export const signIn = async (req, res) => {
 
 export const redirect = (req, res) => {
    res.cookie('accessToken', req.user?.accessToken, {
+      domain: process.env.DOMAIN,
       expires: new Date(Date.now() + 60 * 1000),
    });
    res.cookie('refreshToken', req.user?.refreshToken, {
+      domain: process.env.DOMAIN,
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
    });
    // Successful authentication, redirect success.
