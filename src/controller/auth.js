@@ -173,8 +173,7 @@ export const redirect = (req, res) => {
    // Successful authentication, redirect success.
    res.redirect('http://localhost:5173/');
 };
-
-export const refresh = async (req, res) => {
+export const refresh = async (req, res, next) => {
    try {
       const refreshToken = req.cookies.refreshToken;
       if (!refreshToken) {
@@ -197,6 +196,11 @@ export const refresh = async (req, res) => {
             }
             const accessToken = jwt.sign({ _id: user._id }, process.env.SERECT_ACCESSTOKEN_KEY, {
                expiresIn: '1m',
+            });
+            res.cookie('accessToken', accessToken, {
+               expires: new Date(Date.now() + 5 * 60 * 1000),
+               secure: true,
+               sameSite: 'None',
             });
             return res.status(200).json({
                accessToken,
@@ -221,8 +225,14 @@ export const clearToken = async (req, res) => {
          });
       }
 
-      res.clearCookie('refreshToken');
-      res.clearCookie('accessToken');
+      res.clearCookie('refreshToken', {
+         secure: true,
+         sameSite: 'None',
+      });
+      res.clearCookie('accessToken', {
+         secure: true,
+         sameSite: 'None',
+      });
       return res.status(500).json({
          message: `Token has been cleared`,
       });
